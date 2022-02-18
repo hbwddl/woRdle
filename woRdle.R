@@ -1,11 +1,13 @@
 ## Text-based wordle
 generate_word <- function(wordlen=5,common=F){
+  ## If common, uses the common word lists from the lexicon package
   if(common){
     wordbank <- unique(c(lexicon::sw_fry_1000,lexicon::sw_loughran_mcdonald_short,
                          lexicon::sw_dolch,lexicon::sw_mallet,lexicon::pos_action_verb,
                          lexicon::pos_preposition))
     return(toupper(sample(wordbank[which(nchar(wordbank) == wordlen)],size=1)))
   } else{
+    ## If not common, draws from the entire scrabble dictionary
     return(toupper(sample(words::words[which(words::words$word_length == wordlen),1],size=1)))
   }
 }
@@ -51,6 +53,8 @@ check_word <- function(guess_word,true_word){
 }
 
 check_word_text <- function(guessed){
+  ## Converts numeric word checking to a character for printing
+  
   text.check <- rep(0,length(guessed))
   for(i in 1:length(guessed)){
     if(guessed[i] == -1){
@@ -80,6 +84,7 @@ woRdle <- function(word.length=5,max.guesses=5,challenge=F){
   require(dplyr)
   require(lexicon)
   
+  # Pick true words and start keeping track of previously guessed letters/words
   true.word <- toupper(generate_word(word.length,!challenge))
   n.guesses <- 0
   guessed.words <- ""
